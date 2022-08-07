@@ -68,10 +68,10 @@
 
 |Original Command|Shortcut|
 |:---|:---|
-|`python manage.py runserver`|`django r`|
-|`python manage.py makemigrations`|`django mm`|
-|`python manage.py migrate`|`django m`|
-|`python manage.py createsuperuser`|`django csu`|
-|`python manage.py collectstatic`|`django c`|
-|`python manage.py shell`|`django s`|
-|`python manage.py changepassword`|`django cpw`|
+|```python manage.py runserver```|```django r```|
+|```python manage.py makemigrations```|```django mm```|
+|```python manage.py migrate```|```django m```|
+|```python manage.py createsuperuser```|```django csu```|
+|```python manage.py collectstatic```|```django c```|
+|```python manage.py shell```|```django s```|
+|```python manage.py changepassword```|```django cpw```|
