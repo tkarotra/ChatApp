@@ -59,7 +59,6 @@
 
 ## Now you have setup the project successfully!!
 
-----
 
 > NOTE : You can refer the below table for the shortcuts to all the commands that were used above and more.
 >
