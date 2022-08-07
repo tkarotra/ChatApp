@@ -59,9 +59,8 @@
 
 ## Now you have setup the project successfully!!
 
-<br />
 ----
-<br />
+
 > NOTE : You can refer the below table for the shortcuts to all the commands that were used above and more.
 >
 >> Just remeber to run `pip install django-shortcuts` command to use the bellow shortcuts.
