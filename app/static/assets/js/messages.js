@@ -69,7 +69,7 @@ function submitMessage() {
     let BUDDY
     let USER_ID = document.getElementById('user-id').value
     if (USER_ID==2) 
-        BUDDY = 3
+        BUDDY = 1
     else
         BUDDY = 2
     let data = {

@@ -8,8 +8,8 @@ User = get_user_model()
 class ChatConsumer(AsyncConsumer):
     async def websocket_connect(self, event):
         print('connect', event)
-        user = self.scope['user']
-        chat_room = f'user_chatroom_{user.id}'
+        user_id = self.scope['session']['id']
+        chat_room = f'user_chatroom_{user_id}'
         self.chat_room = chat_room
         await self.channel_layer.group_add(
             chat_room,
@@ -39,10 +39,10 @@ class ChatConsumer(AsyncConsumer):
             return False
 
         other_user_chat_room = f'user_chatroom_{sent_to_id}'
-        self_user = self.scope['user']
+        self_user_id = self.scope['session']['id']
         response = {
             'message': msg,
-            'sent_by': self_user.id
+            'sent_by': self_user_id
         }
 
         await self.channel_layer.group_send (
