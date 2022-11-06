@@ -46,51 +46,36 @@
                                 <input type="text" class="form-control" placeholder="Search...">
                             </div>
                             <ul class="list-unstyled chat-list mt-2 mb-0">
-                                <li class="clearfix">
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar">
-                                    <div class="about">
-                                        <div class="name">Vincent Porter</div>
-                                        <div class="status"> <i class="fa fa-circle offline"></i> left 7 mins ago </div>                                            
-                                    </div>
-                                </li>
-                                <li class="clearfix active">
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
-                                    <div class="about">
-                                        <div class="name">Aiden Chavez</div>
-                                        <div class="status"> <i class="fa fa-circle online"></i> online </div>
-                                    </div>
-                                </li>
-                                <li class="clearfix">
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="avatar">
-                                    <div class="about">
-                                        <div class="name">Mike Thomas</div>
-                                        <div class="status"> <i class="fa fa-circle online"></i> online </div>
-                                    </div>
-                                </li>                                    
-                                <li class="clearfix">
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar">
-                                    <div class="about">
-                                        <div class="name">Christian Kelly</div>
-                                        <div class="status"> <i class="fa fa-circle offline"></i> left 10 hours ago </div>
-                                    </div>
-                                </li>
-                                <li class="clearfix">
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar8.png" alt="avatar">
-                                    <div class="about">
-                                        <div class="name">Monica Ward</div>
-                                        <div class="status"> <i class="fa fa-circle online"></i> online </div>
-                                    </div>
-                                </li>
-                                <li class="clearfix">
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="avatar">
-                                    <div class="about">
-                                        <div class="name">Dean Henry</div>
-                                        <div class="status"> <i class="fa fa-circle offline"></i> offline since Oct 28 </div>
-                                    </div>
-                                </li>
+                                {% for i in rooms %}
+                                    <li id="{{forloop.counter}}" class="{% if forloop.first %}active{% endif %} clearfix" chat-id="chat_{{ i.id }}" other_user_id="{% if i.User_1.id == request.session.id %}{{i.User_2.id}}{% else %}{{i.User_1.id}}{% endif %}">
+                                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar">
+                                        <div class="about">
+                                            {% if i.User_1.id == request.session.id %}
+                                                <div class="name">{{ i.User_2.Username }}</div>
+                                            {% else %}
+                                                <div class="name">{{ i.User_1.Username }}</div>
+                                            {% endif %}
+
+                                            {% if i.LastMessageBy.id != request.session.id %}
+                                                {% if i.MessageRead == False %}
+                                                    <div class="status"> <i class="fa fa-circle online"></i> New Message!</div>
+                                                {% else %}
+                                                    <div class="status"> <i class="fa fa-circle offline"></i> Respond <!-- Reply --></div>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if i.MessageRead == False %}
+                                                    <div class="status"> <i class="fa fa-circle blank"></i> Message Delivered</div>
+                                                {% else %}
+                                                    <div class="status"> <i class="fa fa-circle read"></i> Message Read</div>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+                                    </li>
+                                {% endfor %}
                             </ul>
                         </div>
                         <div class="chat">
+                            <input type="hidden" value="{{ request.session.id }}" id="user-id" />
                             <div class="chat-header clearfix">
                                 <div class="row">
                                     <div class="col-lg-6">
@@ -98,24 +83,22 @@
                                             <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
                                         </a>
                                         <div class="chat-about">
-                                            <h6 class="m-b-0">Aiden Chavez</h6>
-                                            <small>Last seen: 2 hours ago</small>
+                                            <h6 class="m-b-0">{{ request.session.username }}</h6>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 hidden-sm text-right">
-                                        <a href="javascript:void(0);" class="btn btn-outline-secondary"><i class="fa fa-camera"></i></a>
+                                        <!-- <a href="javascript:void(0);" class="btn btn-outline-secondary"><i class="fa fa-camera"></i></a>
                                         <a href="javascript:void(0);" class="btn btn-outline-primary"><i class="fa fa-image"></i></a>
-                                        <a href="javascript:void(0);" class="btn btn-outline-info"><i class="fa fa-cogs"></i></a>
-                                        <a href="javascript:void(0);" class="btn btn-outline-warning"><i class="fa fa-question"></i></a>
+                                        <a href="javascript:void(0);" class="btn btn-outline-info"><i class="fa fa-cogs"></i></a> -->
+                                        <a href="{% url 'logout' %}" class="btn btn-outline-warning"><i class="fa fa-sign-out"></i></a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="chat-history" style="overflow: auto; height: 450px;">
-                                <ul class="m-b-0">
+                            <div class="chat-history" id="chat-body-main" style="overflow: auto; height: 81vh;">
+                                <!-- <ul class="m-b-0" id="message-body-append">
                                     <li class="clearfix">
                                         <div class="message-data text-right">
                                             <span class="message-data-time">10:10 AM, Today</span>
-                                            <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar">
                                         </div>
                                         <div class="message other-message float-right"> Hi Aiden, how are you? How is the project coming along? </div>
                                     </li>
@@ -134,7 +117,6 @@
                                     <li class="clearfix">
                                         <div class="message-data text-right">
                                             <span class="message-data-time">10:10 AM, Today</span>
-                                            <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar">
                                         </div>
                                         <div class="message other-message float-right"> Hi Aiden, how are you? How is the project coming along? </div>
                                     </li>
@@ -147,22 +129,21 @@
                                     <li class="clearfix">
                                         <div class="message-data text-right">
                                             <span class="message-data-time">10:10 AM, Today</span>
-                                            <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar">
                                         </div>
                                         <div class="message other-message float-right">
                                             <img src="https://bootdey.com/img/Content/avatar/avatar7.png" height="100" />
                                         </div>
                                     </li>
-                                </ul>
+                                </ul> -->
                             </div>
-                            <div class="chat-message clearfix">
+                            <!-- <div class="chat-message clearfix">
                                 <div class="input-group mb-0">
-                                    <div class="input-group-prepend">
+                                    <div class="input-group-prepend" onclick="submitMessage()">
                                         <span class="input-group-text"><i class="fa fa-send"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="Enter text here...">                                    
+                                    <textarea type="text" class="form-control" id="input-message" placeholder="Enter text here..." rows="1"></textarea>        
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -172,6 +153,14 @@
         
         <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
         <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'assets/js/messages.js' %}"></script>
+        
+        <script>
+            $(document).ready(function() {
+                var objDiv = document.getElementById("chat-body-main");
+                objDiv.scrollTop = objDiv.scrollHeight;
+            })
+        </script>
 
 
     </body>

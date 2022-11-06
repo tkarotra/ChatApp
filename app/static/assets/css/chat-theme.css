@@ -179,6 +179,8 @@ body{
 
 .online,
 .offline,
+.blank,
+.read,
 .me {
     margin-right: 2px;
     font-size: 8px;
@@ -191,6 +193,14 @@ body{
 
 .offline {
     color: #e47297
+}
+
+.read {
+    color: #1d8ecd;
+}
+
+.blank {
+    color: #919191;
 }
 
 .me {
