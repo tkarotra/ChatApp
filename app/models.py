@@ -32,8 +32,10 @@ class ChatRoom(models.Model):
     User_1 = models.ForeignKey(User, related_name="user_1", on_delete=models.SET_DEFAULT, default="1")
     User_2 = models.ForeignKey(User, related_name="user_2", on_delete=models.SET_DEFAULT, default="1")
     Creation_DateTime = models.DateTimeField(default=datetime.now())
+    
     LastMessageBy = models.ForeignKey(User, related_name="last_user", on_delete=models.SET_DEFAULT, default="1", null=True, blank=True)
     MessageRead = models.BooleanField(default=False)
+    Sent_DateTime = models.DateTimeField(default=datetime.now())
 
     objects = models.Manager()
     user_objects = RoomManager()
