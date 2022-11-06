@@ -7,13 +7,14 @@ from django.http import JsonResponse
 
 def Register(request):
     if request.method =="POST":
-        return redirect('register')
-    else:
-        return render(request, 'app/register.html')
+        return redirect('login')
+    # else:
+    #     return render(request, 'app/register.html')
 
 def Login(request):
     if 'username' not in request.session:
         if request.method == "POST":
+            # p = User.objects.raw('SELECT * FROM app_user WHERE username like ""')
             username = request.POST['username'].lower()
             password = request.POST['password']
             if username and password:
