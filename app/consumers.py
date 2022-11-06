@@ -2,8 +2,8 @@ from channels.consumer import AsyncConsumer
 from django.contrib.auth import get_user_model
 import json
 from channels.db import database_sync_to_async
-
-User = get_user_model()
+from .models import *
+from datetime import datetime
 
 class ChatConsumer(AsyncConsumer):
     async def websocket_connect(self, event):
@@ -25,24 +25,33 @@ class ChatConsumer(AsyncConsumer):
         msg = received_data.get('message')
         sent_by_id = received_data.get('sent_by')
         sent_to_id = received_data.get('sent_to')
+        room_id = received_data.get('room_id')
         if not msg:
             print('ERROR MESSAGE --> Empty Message')
             return False
 
-        sent_by_user = await self.get_user_object(sent_by_id)
-        if not sent_by_user:
-            print("ERROR MESSAGE --> Sent By User Doesn't Exist")
-            return False
-        sent_to_user = await self.get_user_object(sent_to_id)
-        if not sent_to_user:
-            print("ERROR MESSAGE --> Sent To User Doesn't Exist")
+        # sent_by_user = await self.get_user_object(sent_by_id)
+        # if not sent_by_user:
+        #     print("ERROR MESSAGE --> Sent By User Doesn't Exist")
+        #     return False
+        # sent_to_user = await self.get_user_object(sent_to_id)
+        # if not sent_to_user:
+        #     print("ERROR MESSAGE --> Sent To User Doesn't Exist")
+        #     return False
+        # room_obj = await self.get_room_object(room_id)
+        # if not room_obj:
+        #     print("ERROR MESSAGE --> Room Doesn't Exist")
+
+        result = await self.add_message(room_id, sent_by_id, msg)
+        if result == 'Error':
             return False
 
         other_user_chat_room = f'user_chatroom_{sent_to_id}'
         self_user_id = self.scope['session']['id']
         response = {
             'message': msg,
-            'sent_by': self_user_id
+            'sent_by': self_user_id,
+            'room_id': room_id
         }
 
         await self.channel_layer.group_send (
@@ -67,6 +76,15 @@ class ChatConsumer(AsyncConsumer):
             'type': 'websocket.send',
             'text': event['text']
         })
+    
+    '''@database_sync_to_async
+    def get_room_object(self, room_id):
+        qs = ChatRoom.objects.filter(id=room_id)
+        if qs.exists():
+            obj = qs.first()
+        else:
+            obj = None
+        return obj
 
     
     @database_sync_to_async
@@ -76,4 +94,35 @@ class ChatConsumer(AsyncConsumer):
             obj = qs.first()
         else:
             obj = None
-        return obj
+        return obj'''
+        
+    @database_sync_to_async
+    def add_message(self, room_id, sent_by_id, msg):
+        try:
+            sent_by_user_obj = User.objects.get(id=sent_by_id)
+        except Exception as e:
+            print('ERROR MESSAGE ----------> ', e)
+            return 'Error'
+        try:
+            room_obj = ChatRoom.objects.get(id=room_id)
+        except Exception as e:
+            print('ERROR MESSAGE ----------> ', e)
+            return 'Error'
+        try:
+            qs = Message.objects.create(
+                Room_ID = room_obj,
+                Sent_By = sent_by_user_obj,
+                Message_Text = msg,
+                Sent_DateTime = datetime.now()
+            )
+            room_obj.LastMessageBy = sent_by_user_obj
+            room_obj.MessageRead = False
+            room_obj.Sent_DateTime = datetime.now()
+            room_obj.save()
+            return 'Success'
+        except Exception as e:
+            print('ERROR MESSAGE ----------> ', e)
+            return 'Error'
+        # room_qs = ChatRoom.objects.get(id=room_id)
+        # room_qs.LastMessageBy = sent_by_id
+        # room_qs.Sent_DateTime = datetime.now()

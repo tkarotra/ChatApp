@@ -2,12 +2,13 @@
 body{
     background-color: #f4f7f6;
     margin-top:20px;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji" !important;
 }
 .card {
     background: #fff;
     transition: .5s;
     border: 0;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     border-radius: .55rem;
     position: relative;
     width: 100%;
@@ -118,7 +119,8 @@ body{
 
 .chat .chat-history .message-data-time {
     color: #434651;
-    padding-left: 6px
+    padding-left: 6px;
+    font-size: 0.9rem !important;
 }
 
 .chat .chat-history .message {
@@ -126,12 +128,12 @@ body{
     padding: 18px 20px;
     line-height: 26px;
     font-size: 16px;
-    border-radius: 7px;
+    /* border-radius: 10px 10px 10px 0px; */
     display: inline-block;
-    position: relative
+    /* position: relative */
 }
 
-.chat .chat-history .message:after {
+/* .chat .chat-history .message:after {
     bottom: 100%;
     left: 7%;
     border: solid transparent;
@@ -143,13 +145,14 @@ body{
     border-bottom-color: #fff;
     border-width: 10px;
     margin-left: -10px
-}
+} */
 
 .chat .chat-history .my-message {
-    background: #efefef
+    background: #efefef;
+    border-radius: 30px 30px 30px 0px;
 }
 
-.chat .chat-history .my-message:after {
+/* .chat .chat-history .my-message:after {
     bottom: 100%;
     left: 30px;
     border: solid transparent;
@@ -161,11 +164,12 @@ body{
     border-bottom-color: #efefef;
     border-width: 10px;
     margin-left: -10px
-}
+} */
 
 .chat .chat-history .other-message {
+    border-radius: 30px 30px 0px 30px;
     background: #e8f1f3;
-    text-align: right
+    text-align: right;
 }
 
 .chat .chat-history .other-message:after {
@@ -187,24 +191,24 @@ body{
     vertical-align: middle
 }
 
-.online {
-    color: #86c541
+.blank {
+    color: #919191;
+}
+
+.me {
+    color: #1d8ecd;
 }
 
 .offline {
-    color: #e47297
+    color: #e47297;
 }
 
 .read {
     color: #1d8ecd;
 }
 
-.blank {
-    color: #919191;
-}
-
-.me {
-    color: #1d8ecd
+.online {
+    color: #86c541;
 }
 
 .float-right {
